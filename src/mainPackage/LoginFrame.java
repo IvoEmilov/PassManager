@@ -44,7 +44,11 @@ public class LoginFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    MySQLDriver.loginUser(username.getText(),Sha256.toHexString(Sha256.getSHA(String.valueOf(password.getPassword()))));
+                    int userID  = MySQLDriver.loginUser(username.getText(),Sha256.toHexString(Sha256.getSHA(String.valueOf(password.getPassword()))));
+                    if(userID!=-1){
+                        new AccountsFrame(userID);
+                        closeFrame();
+                    }
                 } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
                     noSuchAlgorithmException.printStackTrace();
                 }
@@ -60,6 +64,8 @@ public class LoginFrame extends JFrame {
                 }
             }
         });
-
+    }
+    private void closeFrame(){
+        this.dispose();
     }
 }

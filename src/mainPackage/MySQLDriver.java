@@ -28,22 +28,25 @@ public class MySQLDriver {
                     "id INT AUTO_INCREMENT PRIMARY KEY," +
                     "about VARCHAR(255) NOT NULL," +
                     "username VARCHAR(255) NOT NULL," +
-                    "password VARCHAR(255) NOT NULL);");
+                    "password VARCHAR(255) NOT NULL,"+
+                    "user_id INT NOT NULL,"+
+                    "CONSTRAINT FOREIGN KEY(user_id) REFERENCES USERS(id) ON DELETE CASCADE);");
         }
         catch (SQLException e){
             e.printStackTrace();
         }
     }
 
-    public static void loginUser(String username, String password){
-        if(username.equals("")||password.equals("")) return;
+    public static int loginUser(String username, String password){
+        if(username.equals("")||password.equals("")) return -1;
         try{
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/passwordmanager", "root", "1234");
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery("SELECT id FROM users WHERE username=\""+username+"\" AND password=\""+password+"\";");
             if(result.next()){
-                int id = result.getInt("id");
-                JOptionPane.showMessageDialog(null,"Login successful! ID="+id,"Success",JOptionPane.OK_OPTION);
+                return result.getInt("id");
+               // JOptionPane.showMessageDialog(null,"Login successful! ID="+id,"Success",JOptionPane.OK_OPTION);
+
             }
             else
             {
@@ -55,6 +58,7 @@ public class MySQLDriver {
         catch(SQLException e){
             e.printStackTrace();
         }
+        return -1;
     }
 
     public static void registerUserIntoDatabase(String username, String password){
@@ -82,6 +86,19 @@ public class MySQLDriver {
         catch(SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public static int addAccount(String about, String username, String password, int userID){
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/passwordmanager", "root", "1234");
+            Statement statement = connection.createStatement();
+            return statement.executeUpdate("INSERT INTO accounts (about, username, password, user_id) " +
+                    "VALUES ('"+about+"', '"+username+"', '"+password+"', '"+userID+"');");
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return -1;
     }
 
     public static void test(){
