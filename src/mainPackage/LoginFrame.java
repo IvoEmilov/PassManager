@@ -8,10 +8,10 @@ import java.security.NoSuchAlgorithmException;
 
 public class LoginFrame extends JFrame {
     GridLayout layout = new GridLayout(7,1);
-    JTextField username = new JTextField();
-    JPasswordField password = new JPasswordField();
-    JButton login = new JButton("Login");
-    JButton register = new JButton("Register");
+    JTextField usernameField = new JTextField();
+    JPasswordField passwordField = new JPasswordField();
+    JButton loginBtn = new JButton("Login");
+    JButton registerBtn = new JButton("Register");
     static JLabel invalidLogin = new JLabel("Invalid username/password.");
     JLabel usernameLabel = new JLabel("Username:");
     JLabel passwordLabel = new JLabel("Password:");
@@ -25,26 +25,26 @@ public class LoginFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        login.setFocusable(false);
-        register.setFocusable(false);
+        loginBtn.setFocusable(false);
+        registerBtn.setFocusable(false);
 
         invalidLogin.setForeground(Color.red);
         invalidLogin.setHorizontalAlignment(JLabel.CENTER);
         invalidLogin.setVisible(false);
 
         this.add(usernameLabel);
-        this.add(username);
+        this.add(usernameField);
         this.add(passwordLabel);
-        this.add(password);
-        this.add(login);
-        this.add(register);
+        this.add(passwordField);
+        this.add(loginBtn);
+        this.add(registerBtn);
         this.add(invalidLogin);
 
-        login.addActionListener(new ActionListener() {
+        loginBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    int userID  = MySQLDriver.loginUser(username.getText(),Sha256.toHexString(Sha256.getSHA(String.valueOf(password.getPassword()))));
+                    int userID  = MySQLDriver.loginUser(usernameField.getText(),Sha256.toHexString(Sha256.getSHA(String.valueOf(passwordField.getPassword()))));
                     if(userID!=-1){
                         new AccountsFrame(userID);
                         closeFrame();
@@ -54,11 +54,11 @@ public class LoginFrame extends JFrame {
                 }
             }
         });
-        register.addActionListener(new ActionListener() {
+        registerBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    MySQLDriver.registerUserIntoDatabase(username.getText(),Sha256.toHexString(Sha256.getSHA(String.valueOf(password.getPassword()))));
+                    MySQLDriver.registerUserIntoDatabase(usernameField.getText(),Sha256.toHexString(Sha256.getSHA(String.valueOf(passwordField.getPassword()))));
                 } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
                     noSuchAlgorithmException.printStackTrace();
                 }

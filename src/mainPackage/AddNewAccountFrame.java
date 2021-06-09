@@ -11,41 +11,44 @@ public class AddNewAccountFrame extends JFrame {
     JLabel aboutLabel = new JLabel("Information about the account:");
     JLabel usernameLabel = new JLabel("Username:");
     JLabel passwordLabel = new JLabel("Password:");
-    JTextField aboutText = new JTextField();
-    JTextField usernameText = new JTextField();
-    JPasswordField passwordText = new JPasswordField();
-    JButton addButton = new JButton("ADD");
+    JTextField aboutField = new JTextField();
+    JTextField usernameField = new JTextField();
+    JPasswordField passwordField = new JPasswordField();
+    JButton addBtn = new JButton("ADD");
     AddNewAccountFrame(int userID) {
         this.setTitle("Accounts");
         this.setSize(new Dimension(250, 400));
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setLayout(layout);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        addButton.setFocusable(false);
+        addBtn.setFocusable(false);
 
         this.add(aboutLabel);
-        this.add(aboutText);
+        this.add(aboutField);
         this.add(usernameLabel);
-        this.add(usernameText);
+        this.add(usernameField);
         this.add(passwordLabel);
-        this.add(passwordText);
-        this.add(addButton);
+        this.add(passwordField);
+        this.add(addBtn);
 
-        addButton.addActionListener(new ActionListener() {
+        addBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int result = MySQLDriver.addAccount(aboutText.getText(),usernameText.getText(),String.valueOf(passwordText.getPassword()),userID);
+                int result = MySQLDriver.addAccount(aboutField.getText(),usernameField.getText(),SorgeEncryptor.encrypt(String.valueOf(passwordField.getPassword())),userID);
                 if(result==1) {
                     JOptionPane.showMessageDialog(null,"Successfully Added!");
+                    AccountsFrame.accounts.addItem(aboutField.getText());
                     closeFrame();
+                }
+                else if(result==-2){
+                    JOptionPane.showMessageDialog(null,"Please fill all fields.","Error",JOptionPane.ERROR_MESSAGE);
                 }
                 else{
                     JOptionPane.showMessageDialog(null,"Sorry, there was an error!","Error",JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         });
     }
